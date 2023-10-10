@@ -1,0 +1,30 @@
+﻿@using Web.Models
+@model List<ExpenseForm>
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/ExpenseForm.cshtml";
+}
+    <br/>
+<!-- Masraf kayıtlarını listeleyin -->
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Tarih</th>            
+            <th>Durum</th> 
+            <th>Toplam Masraf</th>
+            <th>Detay</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var expenseForm in Model)
+        {
+            <tr>
+                <td>@expenseForm.CreatedDate</td>              
+                <td>@expenseForm.Status</td>
+                <td>@expenseForm.TotalAmount</td>
+                <td><a asp-action="Edit" asp-route-id="@expenseForm.ExpenseFormID"></a></td>
+            </tr>
+        }
+    </tbody>
+</table>
+

@@ -1,0 +1,41 @@
+﻿
+@{
+    Layout = null;
+}
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Masraf Tanımlama, Düzenleme ve Listeleme Ekranı</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>    
+    <link href="c:\projects\expenseapproval\web\wwwroot\lib\bootstrap\dist\css\bootstrap.css" rel="stylesheet" />
+</head>
+<body>
+
+    <nav class="navbar navbar-inverse">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" style="animation:ease-in" href="#">Masraf Tanımlama Portalına Hoş Geldiniz</a>
+            </div>
+            <ul class="nav navbar-nav">
+                <li class="active"><a href="#">Masraf Tanımla</a></li>
+                <li><a href="#">Onay Bekleyenler</a></li>
+                <li><a href="#">Masraf Listesi</a></li>
+            </ul>
+            <button class="btn btn-danger navbar-btn">Çıkış</button>
+        </div>
+    </nav>
+
+    <div class="container">
+        @RenderBody()
+    </div>
+
+</body>
+</html>
+
+
