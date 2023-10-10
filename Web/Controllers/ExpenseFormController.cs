@@ -21,20 +21,25 @@ namespace Web.Controllers
                 if (expenseForm != null)
                 {
                     // totalAmount, ExpenseForm içindeki toplam Amount değerini içerecektir.
-                   
-                    decimal totalAmount =  expenseForm.CalculateTotalAmount();
+
+                    decimal totalAmount = expenseForm.CalculateTotalAmount();
+
                     if (_expenseForm.TotalAmount != totalAmount)
                     {
                         expenseForm.TotalAmount = expenseForm.CalculateTotalAmount();
                         context.ExpenseForms.Update(expenseForm);
                     }
-                   
-                    
+
                 }
             }
 
             return View(expenseForms);
         }
 
+        public IActionResult AddExpenseForm()
+        {
+            return View();
+        }
     }
+
 }
