@@ -1,8 +1,82 @@
-﻿
+﻿@model Web.Models.ExpenseForm
+
 @{
     ViewData["Title"] = "AddExpenseForm";
     Layout = "~/Views/Shared/ExpenseForm.cshtml";
 }
 
-<h1>AddExpenseForm</h1>
+<h2>Yeni Masraf Formu Ekle</h2>
 
+<form asp-action="Create" method="post">
+    <div class="form-group">
+        <label asp-for="ExpenseName">Masraf Adı</label>
+        <input asp-for="ExpenseName" class="form-control" />
+        <span asp-validation-for="ExpenseName" class="text-danger"></span>
+    </div>
+
+
+    <!-- Diğer ExpenseForm alanları burada olabilir -->
+
+    <button id="addDetailButton" type="button" class="btn btn-primary">Detay Ekle</button>
+
+    <div id="detailAccordion"></div>
+
+    <input type="submit" value="Ekle" class="btn btn-primary" />
+</form>
+
+@section scripts {
+    <script>
+        var detailCount = 0;
+
+        // Detay ekleme butonuna tıklanınca
+        $("#addDetailButton").click(function () {
+            var accordionHtml = '<div class="accordion" id="accordionDetail' + detailCount + '">\
+                        <div class="card">\
+                            <div class="card-header" id="headingDetail' + detailCount + '">\
+                                <h2 class="mb-0">\
+                                    <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseDetail' + detailCount + '" aria-expanded="true" aria-controls="collapseDetail' + detailCount + '">\
+                                        Detay ' + (detailCount + 1) + '\
+                                    </button>\
+                                </h2>\
+                            </div>\
+                            <div id="collapseDetail' + detailCount + '" class="collapse show" aria-labelledby="headingDetail' + detailCount + '" data-parent="#accordionDetail' + detailCount + '">\
+                                <div class="card-body">\
+                                    <div class="form-group">\
+                                        <label for="ExpenseDetails_' + detailCount + '__ExpenseType">Masraf Türü</label>\
+                                        <input type="text" name="ExpenseDetails[' + detailCount + '].ExpenseType" class="form-control" />\
+                                    </div>\
+                                    <div class="form-group">\
+                                        <label for="ExpenseDetails_' + detailCount + '__Amount">Miktar</label>\
+                                        <input type="text" name="ExpenseDetails[' + detailCount + '].Amount" class="form-control" />\
+                                    </div>\
+                                </div>\
+                            </div>\
+                        </div>\
+                    </div>';
+
+            $("#detailAccordion").append(accordionHtml);
+            detailCount++;
+        });
+
+        // Form submit işlemi
+        $("form").submit(function (event) {
+            event.preventDefault();
+
+            var formData = $(this).serialize();
+
+            $.ajax({
+                url: "@Url.Action("AddExpenseForm")",
+                type: "POST",
+                data: formData,
+                success: function (data) {
+                    if (data.success) {
+                        alert(data.message);
+                        location.reload(); // Sayfayı yenile
+                    } else {
+                        alert("Hata: Masraf formu kaydedilemedi.");
+                    }
+                }
+            });
+        });
+    </script>
+}

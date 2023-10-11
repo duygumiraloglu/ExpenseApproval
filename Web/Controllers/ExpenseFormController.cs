@@ -40,6 +40,25 @@ namespace Web.Controllers
         {
             return View();
         }
+
+
+        [HttpPost]
+
+        public IActionResult AddExpenseForm(ExpenseForm model)
+        {
+
+            // ExpenseForm verilerini kaydedin
+            context.ExpenseForms.Add(model);
+
+            if (model.ExpenseDetails.Count>0)
+            {
+                foreach (ExpenseDetail expenseDetail in model.ExpenseDetails)
+                {
+                    context.ExpenseDetails.Add(expenseDetail);
+                }
+            }
+            return RedirectToAction("Index"); // Ekleme işlemi tamamlandığında listeleme sayfasına yönlendirin
+        }
     }
 
 }

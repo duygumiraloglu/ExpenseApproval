@@ -14,10 +14,11 @@ namespace Web.Models
 
         public DateTime CreatedDate { get; set; }
 
-        [MaxLength(255)]
         public string Status { get; set; }
 
         public decimal TotalAmount { get; set; }
+
+        public string ExpenseName { get; set; }
 
         // Navigation Property: ExpenseForm tablosu ile User tablosu arasındaki ilişkiyi temsil eder.
         public User User { get; set; }
