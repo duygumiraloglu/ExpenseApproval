@@ -4,12 +4,24 @@ using System.Reflection.Metadata;
 namespace Web.Models
 {
     public class Context:DbContext
-    {      
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+        public Context(DbContextOptions<Context> options) : base(options)
         {
-            optionsBuilder.UseSqlServer("server=DUYGU\\SQLEXPRESS; database=ExpenseApproval; integrated security=true; TrustServerCertificate=True;");
-
         }
+
+        public void ConfigureServices(IServiceCollection services, IConfiguration configuration)
+        {
+            // Bağlamayı yapılandır
+            services.AddDbContext<Context>(options => options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
+
+            // Diğer servis yapılandırmaları
+        }
+
+        //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        //{
+        //    optionsBuilder.UseSqlServer("server=DUYGU\\SQLEXPRESS; database=ExpenseApproval; integrated security=true; TrustServerCertificate=True;");
+
+        //}
         
         public DbSet<User> Users { get; set; }
         public DbSet<ExpenseForm> ExpenseForms { get; set; }

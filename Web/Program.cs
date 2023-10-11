@@ -1,4 +1,13 @@
+using Microsoft.EntityFrameworkCore;
+using System.Configuration;
+using Web.Data;
+using Web.Models;
+
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddScoped<IExpenseRepository, ExpenseRepository>();
+builder.Services.AddDbContext<Context>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("Connectionstring")));
 
 // Add services to the container.
 builder.Services.AddControllersWithViews().AddRazorRuntimeCompilation();

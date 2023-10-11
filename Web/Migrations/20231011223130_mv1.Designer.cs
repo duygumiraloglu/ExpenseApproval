@@ -12,8 +12,8 @@ using Web.Models;
 namespace Web.Migrations
 {
     [DbContext(typeof(Context))]
-    [Migration("20231010213359_migrationv2")]
-    partial class migrationv2
+    [Migration("20231011223130_mv1")]
+    partial class mv1
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

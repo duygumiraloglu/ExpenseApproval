@@ -1,37 +1,31 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Data;
+using Web.Data;
 using Web.Models;
+using Web.Bussiness;
 
 namespace Web.Controllers
 {
     public class ExpenseFormController : Controller
     {
-        Context context = new Context();
+        private readonly Context _context;
+        private readonly IExpenseRepository _repository;
+        
+        public ExpenseFormController(IExpenseRepository repository, Context context)
+        {
+            _repository = repository;
+            _context = context;
+            
+        }
+
+
         public IActionResult Index()
         {
-            var expenseForms = context.ExpenseForms.ToList();
-
-            foreach (ExpenseForm expenseForm in expenseForms)
-            {
-                var _expenseForm = context.ExpenseForms
-                .Include(ef => ef.ExpenseDetails)
-                .FirstOrDefault(ef => ef.ExpenseFormID == expenseForm.ExpenseFormID);
-
-                if (expenseForm != null)
-                {
-                    // totalAmount, ExpenseForm içindeki toplam Amount değerini içerecektir.
-
-                    decimal totalAmount = expenseForm.CalculateTotalAmount();
-
-                    if (_expenseForm.TotalAmount != totalAmount)
-                    {
-                        expenseForm.TotalAmount = expenseForm.CalculateTotalAmount();
-                        context.ExpenseForms.Update(expenseForm);
-                    }
-
-                }
-            }
+            
+            //GeneralFunctions generalFunctions = new GeneralFunctions();
+            //generalFunctions.TotalAmount();
+            var expenseForms = _context.ExpenseForms.ToList();
 
             return View(expenseForms);
         }
@@ -48,13 +42,39 @@ namespace Web.Controllers
         {
 
             // ExpenseForm verilerini kaydedin
-            context.ExpenseForms.Add(model);
+
+            ExpenseForm expenseModel = new ExpenseForm();
+            expenseModel.ExpenseName = model.ExpenseName;
+            expenseModel.Status = "Yeni Kayıt";
+            expenseModel.CreatedDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
+            decimal totalAmount = 0;
+            //GeneralFunctions generalFunctions = new GeneralFunctions();
+            //decimal totalAmount = generalFunctions.TotalAmount(model.ExpenseDetails);
+
+            expenseModel.TotalAmount = totalAmount;
+
+            expenseModel.ExpenseDetails = new List<ExpenseDetail>();
+            int count = model.ExpenseDetails.Count; // ExpenseDetails sayısını al
+
+            for (int i = 0; i < count; i++)
+            {
+                ExpenseDetail expenseDetail = new ExpenseDetail
+                {
+                    ExpenseType = model.ExpenseDetails[i].ExpenseType,
+                    Amount = model.ExpenseDetails[i].Amount,
+                    
+                };
+
+                expenseModel.ExpenseDetails.Add(expenseDetail); // ExpenseDetail'i ExpenseModel'e ekledik
+            }
+
+            int ExpenseId =  _repository.AddExpenseFormId(expenseModel);
 
             if (model.ExpenseDetails.Count>0)
             {
                 foreach (ExpenseDetail expenseDetail in model.ExpenseDetails)
                 {
-                    context.ExpenseDetails.Add(expenseDetail);
+                    _repository.AddExpenseDetail(expenseDetail);
                 }
             }
             return RedirectToAction("Index"); // Ekleme işlemi tamamlandığında listeleme sayfasına yönlendirin
