@@ -5,23 +5,26 @@ namespace Web.Models
 {
     public class ExpenseForm
     {
-        [Key]
         public int ExpenseFormID { get; set; }
 
+
         [Required]
-        [ForeignKey("User")]
+        [ForeignKey("UserID")]
         public int UserID { get; set; }
 
+        [Required]
         public DateTime CreatedDate { get; set; }
 
+        [Required]
+        [StringLength(50)]
         public string Status { get; set; }
 
-        public decimal TotalAmount { get; set; }
+        [Column(TypeName = "decimal(10, 2)")]
+        public decimal? TotalAmount { get; set; }
 
-        public string ExpenseName { get; set; }
+        [StringLength(100)]
+        public string? ExpenseName { get; set; }
 
-        // Navigation Property: ExpenseForm tablosu ile User tablosu arasındaki ilişkiyi temsil eder.
-        public User User { get; set; }
         public List<ExpenseDetail> ExpenseDetails { get; set; }
 
         public decimal CalculateTotalAmount()

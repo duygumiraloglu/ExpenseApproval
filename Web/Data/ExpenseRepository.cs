@@ -15,9 +15,10 @@ namespace Web.Data
         {
             _context.ExpenseForms.Add(model);
             _context.SaveChanges();
-        }
 
-        public int AddExpenseFormRId(ExpenseForm model)
+        }          
+
+            public int AddExpenseFormRId(ExpenseForm model)
         {
 
             _context.ExpenseForms.Add(model);
@@ -42,6 +43,12 @@ namespace Web.Data
                 expenseForm.TotalAmount = newAmount;
                 _context.SaveChanges();
             }
+        }
+
+        public void AddApproval(Approval model)
+        {
+            _context.Approvals.Add(model);
+            _context.SaveChanges();
         }
 
     }

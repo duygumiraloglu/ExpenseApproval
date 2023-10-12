@@ -8,6 +8,7 @@ namespace Web.Data
         void AddExpenseDetail(ExpenseDetail model);
         int AddExpenseFormRId(ExpenseForm model);
         void UpdateAmount(int expenseFormID, decimal newAmount);
+        void AddApproval(Approval model);
     }
 
 }

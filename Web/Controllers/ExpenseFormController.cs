@@ -11,12 +11,12 @@ namespace Web.Controllers
     {
         private readonly Context _context;
         private readonly IExpenseRepository _repository;
-        
+
         public ExpenseFormController(IExpenseRepository repository, Context context)
         {
             _repository = repository;
             _context = context;
-            
+
         }
 
 
@@ -35,49 +35,43 @@ namespace Web.Controllers
             return View();
         }
 
-
         [HttpPost]
-
         public IActionResult AddExpenseForm(ExpenseForm model)
         {
-
-            // ExpenseForm verilerini kaydedin
-
-            ExpenseForm expenseModel = new ExpenseForm();
-            expenseModel.ExpenseName = model.ExpenseName;
-            expenseModel.Status = "Yeni Kayıt";
-            expenseModel.CreatedDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
-            expenseModel.UserID = 1;
-            GeneralFunctions generalFunctions = new GeneralFunctions(_context);
-            decimal totalAmount = generalFunctions.TotalAmount(model.ExpenseDetails);
-
-            expenseModel.TotalAmount = totalAmount;
-
-            expenseModel.ExpenseDetails = new List<ExpenseDetail>();
-            int count = model.ExpenseDetails.Count; // ExpenseDetails sayısını al
-
-            for (int i = 0; i < count; i++)
+            if (ModelState.IsValid)
             {
-                ExpenseDetail expenseDetail = new ExpenseDetail
-                {
-                    ExpenseType = model.ExpenseDetails[i].ExpenseType,
-                    Amount = model.ExpenseDetails[i].Amount,
-                    
-                };
+                model.Status = model.Status;
+                model.CreatedDate = DateTime.Now;
+                model.UserID = 1;
 
-                expenseModel.ExpenseDetails.Add(expenseDetail); // ExpenseDetail'i ExpenseModel'e ekledik
+                decimal totalAmount = CalculateTotalAmount(model.ExpenseDetails);
+                model.TotalAmount = totalAmount;
+
+                int expenseId = _repository.AddExpenseFormRId(model);
+
+                Approval approval = new Approval();
+                approval.Status = model.Status;
+                approval.UserID = 1;
+                approval.ExpenseFormID = expenseId;
+
+                _repository.AddApproval(approval);
+
+                return RedirectToAction("Index", "ExpenseForm");
+            }
+            
+            return View(model); // Aynı sayfayı tekrar göstermek için modeli geri döneme
+        }
+
+        private decimal CalculateTotalAmount(IEnumerable<ExpenseDetail> details)
+        {
+            decimal totalAmount = 0;
+
+            foreach (var detail in details)
+            {
+                totalAmount += detail.Amount;
             }
 
-            int ExpenseId =  _repository.AddExpenseFormRId(expenseModel);
-
-            if (model.ExpenseDetails.Count>0)
-            {
-                foreach (ExpenseDetail expenseDetail in model.ExpenseDetails)
-                {
-                    _repository.AddExpenseDetail(expenseDetail);
-                }
-            }
-            return RedirectToAction("Index"); // Ekleme işlemi tamamlandığında listeleme sayfasına yönlendirin
+            return totalAmount;
         }
     }
 

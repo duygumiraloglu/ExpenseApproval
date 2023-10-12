@@ -7,17 +7,18 @@
 
 <h2>Yeni Masraf Formu Ekle</h2>
 
-<form asp-action="Create" method="post">
+<form asp-action="AddExpenseForm" method="post">
     <div class="form-group">
         <label asp-for="ExpenseName">Masraf Adı</label>
         <input asp-for="ExpenseName" class="form-control" />
         <span asp-validation-for="ExpenseName" class="text-danger"></span>
+        <input type="hidden" asp-for="Status" value="Yeni Masraf Kaydı" />
     </div>
 
     <button id="addDetailButton" type="button" class="btn btn-primary">Detay Ekle</button>
 
     
-    <div id="detailAccordion"></div>
+    <div id="detailAccordion"></div>       
 
     <input type="submit" value="Ekle" class="btn btn-primary" />
 </form>
@@ -28,6 +29,8 @@
 
         // Detay ekleme butonuna tıklanınca
         $("#addDetailButton").click(function () {
+            var detailCount = $(".accordion").length; // Detay sayısını al
+
             var accordionHtml = '<div class="accordion" id="accordionDetail' + detailCount + '">\
                         <div class="card">\
                             <div class="card-header" id="headingDetail' + detailCount + '">\
@@ -47,34 +50,15 @@
                                         <label for="ExpenseDetails_' + detailCount + '__Amount">Miktar</label>\
                                         <input type="text" name="ExpenseDetails[' + detailCount + '].Amount" class="form-control" />\
                                     </div>\
+                                    <input type="hidden" name="ExpenseDetails[' + detailCount + '].ExpenseDetailID" value="0" />\
                                 </div>\
                             </div>\
                         </div>\
                     </div>';
 
             $("#detailAccordion").append(accordionHtml);
-            detailCount++;
-        });
-
-        // Form submit işlemi
-        $("form").submit(function (event) {
-            event.preventDefault();
-
-            var formData = $(this).serialize();
-
-            $.ajax({
-                url: "@Url.Action("AddExpenseForm")",
-                type: "POST",
-                data: formData,
-                success: function (data) {
-                    if (data.success) {
-                        alert(data.message);
-                        location.reload(); // Sayfayı yenile
-                    } else {
-                        alert("Hata: Masraf formu kaydedilemedi.");
-                    }
-                }
-            });
         });
     </script>
+
+
 }

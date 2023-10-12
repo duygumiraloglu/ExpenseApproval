@@ -2,26 +2,25 @@
 
 namespace Web.Models
 {
-    public class User
+    public class Users
     {
-        [Key]
         public int UserID { get; set; }
 
         [Required]
-        [MaxLength(255)]
+        [StringLength(50)]
         public string Username { get; set; }
 
         [Required]
-        [MaxLength(255)]
+        [StringLength(50)]
         public string PasswordHash { get; set; }
 
-        [MaxLength(255)]
+        [StringLength(50)]
         public string FullName { get; set; }
 
-        [MaxLength(255)]
+        [StringLength(50)]
         public string Email { get; set; }
 
-        [MaxLength(255)]
+        [StringLength(50)]
         public string Role { get; set; }
     }
 }

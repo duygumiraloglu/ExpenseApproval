@@ -30,30 +30,31 @@ namespace Web.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ApprovalID"));
 
-                    b.Property<DateTime>("ApprovalDate")
+                    b.Property<DateTime?>("ApprovalDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Comment")
                         .IsRequired()
-                        .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<int>("ExpenseFormID")
                         .HasColumnType("int");
 
                     b.Property<string>("Status")
                         .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<int>("UserID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UserId")
                         .HasColumnType("int");
 
                     b.HasKey("ApprovalID");
 
                     b.HasIndex("ExpenseFormID");
-
-                    b.HasIndex("UserID");
 
                     b.ToTable("Approvals");
                 });
@@ -74,8 +75,8 @@ namespace Web.Migrations
 
                     b.Property<string>("ExpenseType")
                         .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.HasKey("ExpenseDetailID");
 
@@ -97,59 +98,57 @@ namespace Web.Migrations
 
                     b.Property<string>("ExpenseName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("Status")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
-                    b.Property<decimal>("TotalAmount")
+                    b.Property<decimal?>("TotalAmount")
                         .HasColumnType("decimal(10,2)");
 
                     b.Property<int>("UserID")
                         .HasColumnType("int");
 
-                    b.HasKey("ExpenseFormID");
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
 
-                    b.HasIndex("UserID");
+                    b.HasKey("ExpenseFormID");
 
                     b.ToTable("ExpenseForms");
                 });
 
-            modelBuilder.Entity("Web.Models.User", b =>
+            modelBuilder.Entity("Web.Models.Users", b =>
                 {
-                    b.Property<int>("UserID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("UserID"));
-
                     b.Property<string>("Email")
                         .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("FullName")
                         .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("PasswordHash")
                         .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("Role")
                         .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<int>("UserID")
+                        .HasColumnType("int");
 
                     b.Property<string>("Username")
                         .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
-
-                    b.HasKey("UserID");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.ToTable("Users");
                 });
@@ -162,15 +161,7 @@ namespace Web.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Web.Models.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("ExpenseForm");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Web.Models.ExpenseDetail", b =>
@@ -182,17 +173,6 @@ namespace Web.Migrations
                         .IsRequired();
 
                     b.Navigation("ExpenseForm");
-                });
-
-            modelBuilder.Entity("Web.Models.ExpenseForm", b =>
-                {
-                    b.HasOne("Web.Models.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Web.Models.ExpenseForm", b =>

@@ -5,27 +5,25 @@ namespace Web.Models
 {
     public class Approval
     {
-        [Key]
         public int ApprovalID { get; set; }
 
+        [ForeignKey("UserID")]
         [Required]
-        [ForeignKey("ExpenseForm")]
         public int ExpenseFormID { get; set; }
 
         [Required]
-        [ForeignKey("User")]
         public int UserID { get; set; }
 
-        public DateTime ApprovalDate { get; set; }
+        public DateTime? ApprovalDate { get; set; }
 
-        [MaxLength(255)]
+        [StringLength(50)]
         public string Status { get; set; }
 
-        [MaxLength(1000)] // Örnek bir maksimum yorum uzunluğu
+        [StringLength(50)]
         public string Comment { get; set; }
 
-        // Navigation Property: Approval tablosu ile ExpenseForm ve User tabloları arasındaki ilişkileri temsil eder.
+        [ForeignKey("ExpenseFormID")]
         public ExpenseForm ExpenseForm { get; set; }
-        public User User { get; set; }
+
     }
 }
