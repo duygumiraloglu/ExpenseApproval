@@ -22,9 +22,9 @@ namespace Web.Controllers
 
         public IActionResult Index()
         {
-            
-            //GeneralFunctions generalFunctions = new GeneralFunctions();
-            //generalFunctions.TotalAmount();
+
+            GeneralFunctions generalFunctions = new GeneralFunctions(_context);
+            generalFunctions.TotalAmount();
             var expenseForms = _context.ExpenseForms.ToList();
 
             return View(expenseForms);
@@ -47,9 +47,9 @@ namespace Web.Controllers
             expenseModel.ExpenseName = model.ExpenseName;
             expenseModel.Status = "Yeni Kayıt";
             expenseModel.CreatedDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
-            decimal totalAmount = 0;
-            //GeneralFunctions generalFunctions = new GeneralFunctions();
-            //decimal totalAmount = generalFunctions.TotalAmount(model.ExpenseDetails);
+            expenseModel.UserID = 1;
+            GeneralFunctions generalFunctions = new GeneralFunctions(_context);
+            decimal totalAmount = generalFunctions.TotalAmount(model.ExpenseDetails);
 
             expenseModel.TotalAmount = totalAmount;
 
@@ -68,7 +68,7 @@ namespace Web.Controllers
                 expenseModel.ExpenseDetails.Add(expenseDetail); // ExpenseDetail'i ExpenseModel'e ekledik
             }
 
-            int ExpenseId =  _repository.AddExpenseFormId(expenseModel);
+            int ExpenseId =  _repository.AddExpenseFormRId(expenseModel);
 
             if (model.ExpenseDetails.Count>0)
             {

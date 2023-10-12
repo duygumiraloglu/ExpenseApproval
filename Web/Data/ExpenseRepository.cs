@@ -5,7 +5,7 @@ namespace Web.Data
 {
     public class ExpenseRepository : IExpenseRepository
     {
-        private readonly Context _context; 
+        private readonly Context _context;
 
         public ExpenseRepository(Context context)
         {
@@ -17,12 +17,13 @@ namespace Web.Data
             _context.SaveChanges();
         }
 
-        public int AddExpenseFormId(ExpenseForm model)
+        public int AddExpenseFormRId(ExpenseForm model)
         {
+
             _context.ExpenseForms.Add(model);
             _context.SaveChanges();
-           
             return model.ExpenseFormID;
+
         }
 
 

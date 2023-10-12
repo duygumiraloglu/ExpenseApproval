@@ -6,7 +6,7 @@ namespace Web.Data
     {
         void AddExpenseForm(ExpenseForm model);
         void AddExpenseDetail(ExpenseDetail model);
-        int AddExpenseFormId(ExpenseForm model);
+        int AddExpenseFormRId(ExpenseForm model);
         void UpdateAmount(int expenseFormID, decimal newAmount);
     }
 
