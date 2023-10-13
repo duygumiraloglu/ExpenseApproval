@@ -27,7 +27,11 @@
                 <li><a href="#">Onay Bekleyenler</a></li>
                 <li><a href="#">Masraf Listesi</a></li>
             </ul>
-            <button class="btn btn-danger navbar-btn">Çıkış</button>
+            <form method="post" asp-action="SignOut" asp-controller="SignOut" class="navbar-form navbar-right">
+                @Html.AntiForgeryToken()
+                <button type="submit" class="btn btn-danger">Çıkış Yap</button>
+            </form>
+           
         </div>
     </nav>
 

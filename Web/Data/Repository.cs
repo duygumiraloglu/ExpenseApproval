@@ -51,9 +51,9 @@ namespace Web.Data
             _context.SaveChanges();
         }
 
-        public Users GetUserByUsername(string username)
+        public Users GetUserByUP(string username, string password)
         {
-            return _context.Users.FirstOrDefault(u => u.Username == username);
+            return _context.Users.FirstOrDefault(u => u.Username == username && u.PasswordHash == password);
         }
 
         public Users GetUsersById(int userId)

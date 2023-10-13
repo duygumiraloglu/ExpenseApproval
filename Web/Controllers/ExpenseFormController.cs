@@ -4,6 +4,7 @@ using System.Data;
 using Web.Data;
 using Web.Models;
 using Web.Bussiness;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Web.Controllers
 {
@@ -18,7 +19,7 @@ namespace Web.Controllers
             _context = context;
 
         }
-
+        [Authorize]
         public IActionResult Index()
         {
 
@@ -29,11 +30,13 @@ namespace Web.Controllers
             return View(expenseForms);
         }
 
+        [Authorize]
         public IActionResult AddExpenseForm()
         {
             return View();
         }
 
+        [Authorize]
         [HttpPost]
         public IActionResult AddExpenseForm(ExpenseForm model)
         {

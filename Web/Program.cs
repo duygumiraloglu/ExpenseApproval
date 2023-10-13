@@ -1,7 +1,8 @@
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using System.Configuration;
 using Web.Data;
 using Web.Models;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,13 +13,23 @@ builder.Services.AddDbContext<Context>(options =>
 // Add services to the container.
 builder.Services.AddControllersWithViews().AddRazorRuntimeCompilation();
 
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(x=> {
+        x.LoginPath = "/Login/GirisYap/";
+        });
+
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.LogoutPath = "/Login/GirisYap/"; // Çıkış yapıldığında yönlendirilecek giriş sayfası yolu
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+   
     app.UseHsts();
 }
 

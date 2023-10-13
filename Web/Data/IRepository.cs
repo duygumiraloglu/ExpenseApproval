@@ -9,7 +9,7 @@ namespace Web.Data
         int AddExpenseFormRId(ExpenseForm model);
         void UpdateAmount(int expenseFormID, decimal newAmount);
         void AddApproval(Approval model);
-        Users GetUserByUsername(string username);
+        Users GetUserByUP(string username, string password);
         Users GetUsersById(int id);
     }
 

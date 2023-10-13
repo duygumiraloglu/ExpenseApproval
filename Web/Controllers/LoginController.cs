@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 using Web.Data;
 using Web.Models;
 
@@ -29,11 +31,19 @@ namespace Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult GirisYap(Users model)
+        public async Task<IActionResult> GirisYap(Users model)
         {
             if (ModelState.IsValid)
             {
-                Users user = _repository.GetUserByUsername(model.Username);
+                Users user = _repository.GetUserByUP(model.Username, model.PasswordHash);
+
+                var claims = new List<Claim>
+                {
+                    new Claim(ClaimTypes.Name,model.Username)
+                };
+                var useridentity=new ClaimsIdentity(claims,"Login");
+                ClaimsPrincipal principal = new ClaimsPrincipal(useridentity);  
+                await HttpContext.SignInAsync(principal);   
 
                 return RedirectToAction("Index", "ExpenseForm");
 
