@@ -3,11 +3,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Web.Data
 {
-    public class ExpenseRepository : IExpenseRepository
+    public class Repository : IRepository
     {
         private readonly Context _context;
 
-        public ExpenseRepository(Context context)
+        public Repository(Context context)
         {
             _context = context;
         }
@@ -49,6 +49,16 @@ namespace Web.Data
         {
             _context.Approvals.Add(model);
             _context.SaveChanges();
+        }
+
+        public Users GetUserByUsername(string username)
+        {
+            return _context.Users.FirstOrDefault(u => u.Username == username);
+        }
+
+        public Users GetUsersById(int userId)
+        {
+            return _context.Users.FirstOrDefault(u => u.UserID == userId);
         }
 
     }

@@ -27,6 +27,7 @@ namespace Web.Models
 
         public List<ExpenseDetail> ExpenseDetails { get; set; }
 
+
         public decimal CalculateTotalAmount()
         {
             if (ExpenseDetails != null)

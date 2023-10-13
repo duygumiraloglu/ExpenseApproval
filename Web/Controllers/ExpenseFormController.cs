@@ -10,15 +10,14 @@ namespace Web.Controllers
     public class ExpenseFormController : Controller
     {
         private readonly Context _context;
-        private readonly IExpenseRepository _repository;
+        private readonly IRepository _repository;
 
-        public ExpenseFormController(IExpenseRepository repository, Context context)
+        public ExpenseFormController(IRepository repository, Context context)
         {
             _repository = repository;
             _context = context;
 
         }
-
 
         public IActionResult Index()
         {

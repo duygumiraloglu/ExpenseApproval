@@ -5,7 +5,7 @@ using Web.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddScoped<IExpenseRepository, ExpenseRepository>();
+builder.Services.AddScoped<IRepository, Repository>();
 builder.Services.AddDbContext<Context>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("Connectionstring")));
 
@@ -27,10 +27,11 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=ExpenseForm}/{action=Index}/{id?}");
+    pattern: "{controller=Login}/{action=GirisYap}/{id?}");
 
 app.Run();

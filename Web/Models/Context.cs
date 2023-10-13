@@ -24,7 +24,6 @@ namespace Web.Models
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-
             modelBuilder.Entity<Users>().HasNoKey();
             modelBuilder.Entity<ExpenseDetail>()
                 .Property(ef => ef.Amount)
