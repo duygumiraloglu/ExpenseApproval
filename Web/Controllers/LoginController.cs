@@ -37,15 +37,18 @@ namespace Web.Controllers
             {
                 Users user = _repository.GetUserByUP(model.Username, model.PasswordHash);
 
-                var claims = new List<Claim>
+                if (user != null)
                 {
-                    new Claim(ClaimTypes.Name,model.Username)
-                };
-                var useridentity=new ClaimsIdentity(claims,"Login");
-                ClaimsPrincipal principal = new ClaimsPrincipal(useridentity);  
-                await HttpContext.SignInAsync(principal);   
+                    var claims = new List<Claim>
+                    {
+                        new Claim(ClaimTypes.Name,model.Username)
+                    };
+                    var useridentity = new ClaimsIdentity(claims, "Login");
+                    ClaimsPrincipal principal = new ClaimsPrincipal(useridentity);
+                    await HttpContext.SignInAsync(principal);
 
-                return RedirectToAction("Index", "ExpenseForm");
+                    return RedirectToAction("Index", "ExpenseForm");
+                }
 
             }
 
