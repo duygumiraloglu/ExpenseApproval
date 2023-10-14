@@ -1,41 +1,47 @@
 ﻿@using Web.Models
-@model List<ExpenseForm>
+@using X.PagedList
+@using X.PagedList.Mvc.Core
+@model IPagedList<Web.Models.ExpenseForm>
+
 @{
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/ExpenseForm.cshtml";
 }
 
-<br />
-
-<div class="form-group">
-    <a href="/ExpenseForm/AddExpenseForm/" class="btn btn-primary">Ekle</a>
-</div>
-<!-- Masraf kayıtlarını listeleyin -->
-<table class="table table-bordered">
-    <thead>
-        <tr>
-            <th>Tarih</th>
-            <th>Durum</th>
-            <th>Toplam Masraf</th>
-            <th>Detay</th>
-            <th>Sil</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var expenseForm in Model)
-        {
+<div class="container mt-5">
+    <div class="form-group">
+        <a href="/ExpenseForm/AddExpenseForm/" class="btn btn-primary">Ekle</a>
+    </div>
+    <!-- Masraf kayıtlarını listeleyin -->
+    <table class="table table-bordered">
+        <thead>
             <tr>
-                <td>@expenseForm.CreatedDate</td>
-                <td>@expenseForm.Status</td>
-                <td>@expenseForm.TotalAmount</td>
-                <td><input type="submit" value="Düzenle" class="btn btn-success" /></td>
-                <td>
-                <td>
-                    <a asp-action="DeleteExpenseForm" asp-route-id="@expenseForm.ExpenseFormID">
-                        <input type="submit" value="Sil" class="btn btn-danger" />
-                    </a>
-                </td>
+                <th>Tarih</th>
+                <th>Durum</th>
+                <th>Toplam Masraf</th>
+                <th>Detay</th>
+                <th>Sil</th>
             </tr>
-        }
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            @foreach (var expenseForm in Model)
+            {
+                <tr>
+                    <td>@expenseForm.CreatedDate</td>
+                    <td>@expenseForm.Status</td>
+                    <td>@expenseForm.TotalAmount</td>
+                    <td><input type="submit" value="Düzenle" class="btn btn-success" /></td>
+                    <td>
+                    <td>
+                        <a asp-action="DeleteExpenseForm" asp-route-id="@expenseForm.ExpenseFormID">
+                            <input type="submit" value="Sil" class="btn btn-danger" />
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>    
+
+    <!-- Sayfalama yapisi -->
+    @Html.PagedListPager((IPagedList)Model,page=>Url.Action("Index",new {page}))
+</div>

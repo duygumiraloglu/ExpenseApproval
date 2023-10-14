@@ -6,6 +6,8 @@ using Web.Models;
 using Web.Bussiness;
 using Microsoft.AspNetCore.Authorization;
 using System.Data.SqlTypes;
+using X.PagedList;
+using X.PagedList.Mvc.Core;
 
 namespace Web.Controllers
 {
@@ -21,12 +23,13 @@ namespace Web.Controllers
 
         }
         [Authorize]
-        public IActionResult Index()
+        public IActionResult Index(int page = 1)
         {
+            
 
             GeneralFunctions generalFunctions = new GeneralFunctions(_context);
             generalFunctions.TotalAmount();
-            var expenseForms = _context.ExpenseForms.ToList();
+            var expenseForms = _context.ExpenseForms.ToPagedList(page,8);
 
             return View(expenseForms);
         }
