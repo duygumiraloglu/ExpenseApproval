@@ -7,20 +7,19 @@ namespace Web.Models
     {
         public int ApprovalID { get; set; }
 
-        [ForeignKey("UserID")]
-        [Required]
+        
         public int ExpenseFormID { get; set; }
 
-        [Required]
+        [ForeignKey("UserID")]
         public int UserID { get; set; }
 
         public DateTime? ApprovalDate { get; set; }
 
         [StringLength(50)]
-        public string Status { get; set; }
+        public string? Status { get; set; }
 
         [StringLength(50)]
-        public string Comment { get; set; }
+        public string? Comment { get; set; }
 
         [ForeignKey("ExpenseFormID")]
         public ExpenseForm ExpenseForm { get; set; }

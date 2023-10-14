@@ -44,7 +44,7 @@ namespace Web.Bussiness
 
             if (expenseDetails != null)
             {
-                totalAmount = expenseDetails.Sum(detail => detail.Amount);                
+                totalAmount = (decimal)expenseDetails.Sum(detail => detail.Amount);                
             }
 
             return totalAmount;

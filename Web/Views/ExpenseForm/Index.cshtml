@@ -29,7 +29,12 @@
                 <td>@expenseForm.Status</td>
                 <td>@expenseForm.TotalAmount</td>
                 <td><input type="submit" value="Düzenle" class="btn btn-success" /></td>
-                <td><input type="submit" value="Sil" class="btn btn-dan" /></td>
+                <td>
+                <td>
+                    <a asp-action="DeleteExpenseForm" asp-route-id="@expenseForm.ExpenseFormID">
+                        <input type="submit" value="Sil" class="btn btn-danger" />
+                    </a>
+                </td>
             </tr>
         }
     </tbody>

@@ -9,7 +9,7 @@ namespace Web.Models
         public int ExpenseFormID { get; set; }
 
         [StringLength(50)]
-        public string ExpenseType { get; set; }
+        public string? ExpenseType { get; set; }
 
         [Column(TypeName = "decimal(10, 2)")]
         public decimal Amount { get; set; }

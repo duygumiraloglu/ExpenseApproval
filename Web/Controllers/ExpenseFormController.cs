@@ -5,6 +5,7 @@ using Web.Data;
 using Web.Models;
 using Web.Bussiness;
 using Microsoft.AspNetCore.Authorization;
+using System.Data.SqlTypes;
 
 namespace Web.Controllers
 {
@@ -60,7 +61,7 @@ namespace Web.Controllers
 
                 return RedirectToAction("Index", "ExpenseForm");
             }
-            
+
             return View(model); // Aynı sayfayı tekrar göstermek için modeli geri döneme
         }
 
@@ -68,12 +69,69 @@ namespace Web.Controllers
         {
             decimal totalAmount = 0;
 
-            foreach (var detail in details)
-            {
+            foreach (var detail in details) { 
                 totalAmount += detail.Amount;
             }
 
             return totalAmount;
+        }
+
+        public IActionResult DeleteExpenseForm(int id)
+        {
+            try
+            {
+                // Null değeri işle
+
+                var approvals = _context.Approvals.Where(ed => ed.ExpenseFormID == id).ToList();
+
+                if (approvals != null)
+                {
+                    foreach (Approval approval in approvals)
+                    {
+                        _context.Approvals.Remove(approval);
+                        _context.SaveChanges();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Hata : " + ex.Message);
+            }
+            try
+            {               
+                var expenseDetails = _context.ExpenseDetails.Where(ed => ed.ExpenseFormID == id).ToList();
+
+                if (expenseDetails != null)
+                {
+                    foreach (ExpenseDetail expenseDetail in expenseDetails)
+                    {
+                        _context.ExpenseDetails.Remove(expenseDetail);
+                        _context.SaveChanges();
+                    }
+                }
+
+                var expenseForm = _context.ExpenseForms.FirstOrDefault(ef => ef.ExpenseFormID == id);
+                if (expenseForm != null)
+                {
+                    _context.ExpenseForms.Remove(expenseForm);
+                    _context.SaveChanges();
+                }
+            }
+            catch (Exception ex)
+            {
+                // Genel hata yakalama
+
+                Console.WriteLine("Hata: " + ex.Message);
+            }
+            finally
+            {
+                // Her durumda çalışacak
+                Console.WriteLine("İşlem tamamlandı.");
+            }
+
+
+
+            return RedirectToAction("Index", "ExpenseForm"); // Silme işlemi tamamlandıktan sonra yonlendirme
         }
     }
 
