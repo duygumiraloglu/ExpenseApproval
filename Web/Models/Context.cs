@@ -21,7 +21,6 @@ namespace Web.Models
         public DbSet<ExpenseForm> ExpenseForms { get; set; }
         public DbSet<ExpenseDetail> ExpenseDetails { get; set; }
         public DbSet<Approval> Approvals { get; set; }
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Users>().HasNoKey();

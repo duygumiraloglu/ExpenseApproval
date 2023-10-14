@@ -61,6 +61,11 @@ namespace Web.Data
             return _context.Users.FirstOrDefault(u => u.UserID == userId);
         }
 
+        public Users GetUsersByName(string username)
+        {
+            return _context.Users.FirstOrDefault(u => u.Username == username);
+        }
+
     }
 
 }

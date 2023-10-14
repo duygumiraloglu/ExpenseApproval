@@ -11,6 +11,7 @@ namespace Web.Data
         void AddApproval(Approval model);
         Users GetUserByUP(string username, string password);
         Users GetUsersById(int id);
+        Users GetUsersByName(string username);
     }
 
 }

@@ -3,6 +3,7 @@ using System.Configuration;
 using Web.Data;
 using Web.Models;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 

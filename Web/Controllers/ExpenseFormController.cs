@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 using System.Data.SqlTypes;
 using X.PagedList;
 using X.PagedList.Mvc.Core;
+using Microsoft.AspNetCore.Identity;
 
 namespace Web.Controllers
 {
@@ -25,11 +26,11 @@ namespace Web.Controllers
         [Authorize]
         public IActionResult Index(int page = 1)
         {
-            
+
 
             GeneralFunctions generalFunctions = new GeneralFunctions(_context);
             generalFunctions.TotalAmount();
-            var expenseForms = _context.ExpenseForms.ToPagedList(page,8);
+            var expenseForms = _context.ExpenseForms.ToPagedList(page, 8);
 
             return View(expenseForms);
         }
@@ -46,9 +47,11 @@ namespace Web.Controllers
         {
             if (ModelState.IsValid)
             {
+                Users user = _repository.GetUsersByName(User.Identity.Name);
+
                 model.Status = model.Status;
                 model.CreatedDate = DateTime.Now;
-                model.UserID = 1;
+                model.UserID = user.UserID;
 
                 decimal totalAmount = CalculateTotalAmount(model.ExpenseDetails);
                 model.TotalAmount = totalAmount;
@@ -57,7 +60,7 @@ namespace Web.Controllers
 
                 Approval approval = new Approval();
                 approval.Status = model.Status;
-                approval.UserID = 1;
+                approval.UserID = user.UserID;
                 approval.ExpenseFormID = expenseId;
 
                 _repository.AddApproval(approval);
@@ -72,13 +75,73 @@ namespace Web.Controllers
         {
             decimal totalAmount = 0;
 
-            foreach (var detail in details) { 
+            foreach (var detail in details)
+            {
                 totalAmount += detail.Amount;
             }
 
             return totalAmount;
         }
 
+        [Authorize]
+        public IActionResult UpdateExpenseForm(int id)
+        {
+            // ID'ye göre ExpenseForm verisini al
+            var expenseForm = _context.ExpenseForms
+                .Include(ef => ef.ExpenseDetails)
+                .FirstOrDefault(ef => ef.ExpenseFormID == id);
+
+            if (expenseForm == null)
+            {
+                return RedirectToAction("Index", "ExpenseForm");
+            }
+
+            return View(expenseForm);
+        }
+
+        [Authorize]
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult UpdateExpenseForm(ExpenseForm updatedForm)
+        {
+            if (ModelState.IsValid)
+            {
+                // Mevcut ExpenseForm verisini güncellenmesi
+                _context.Entry(updatedForm).State = EntityState.Modified;
+
+                // Mevcut ExpenseDetails verilerini güncelle veya ekle
+                foreach (var detail in updatedForm.ExpenseDetails)
+                {
+                    if (detail.ExpenseDetailID == 0)
+                    {
+                        // Yeni bir ExpenseDetail
+                        _context.Entry(detail).State = EntityState.Added;
+                    }
+                    else
+                    {
+                        // Mevcut bir ExpenseDetail
+                        _context.Entry(detail).State = EntityState.Modified;
+                    }
+                }
+
+                try
+                {
+                    _context.SaveChangesAsync();
+                    return RedirectToAction("Index", "ExpenseForm"); // Başka bir sayfaya yönlendirin veya işlem sonuçlarını gösterilmesi
+                }
+                catch (DbUpdateException)
+                {
+                    // Hata işleme kodu eklenmesi
+                    ModelState.AddModelError("", "Güncelleme sırasında bir hata oluştu.");
+                }
+            }
+
+            // Model doğrulama hatası varsa, sayfaynın tekrar gösterilmesi
+            return View(updatedForm);
+        }
+
+        [Authorize]
         public IActionResult DeleteExpenseForm(int id)
         {
             try
@@ -101,7 +164,7 @@ namespace Web.Controllers
                 Console.WriteLine("Hata : " + ex.Message);
             }
             try
-            {               
+            {
                 var expenseDetails = _context.ExpenseDetails.Where(ed => ed.ExpenseFormID == id).ToList();
 
                 if (expenseDetails != null)
