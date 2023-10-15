@@ -32,10 +32,9 @@
                     <td>@expenseForm.TotalAmount</td>
                     <td>
                         <a asp-action="UpdateExpenseForm" asp-route-id="@expenseForm.ExpenseFormID">
-                            <input type="submit" value="Duzenle" class="btn btn-success" />
+                            <input type="submit" value="Duzenle" class="btn btn-warning" />
                         </a>
-                    </td>
-                    <td>
+                    </td>                   
                     <td>
                         <a asp-action="DeleteExpenseForm" asp-route-id="@expenseForm.ExpenseFormID">
                             <input type="submit" value="Sil" class="btn btn-danger" />

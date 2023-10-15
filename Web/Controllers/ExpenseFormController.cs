@@ -26,10 +26,7 @@ namespace Web.Controllers
         [Authorize]
         public IActionResult Index(int page = 1)
         {
-
-            GeneralFunctions generalFunctions = new GeneralFunctions(_context);
             var expenseForms = _context.ExpenseForms.OrderByDescending(ef => ef.ExpenseFormID).ToPagedList(page, 8);
-
 
             return View(expenseForms);
         }
@@ -107,7 +104,7 @@ namespace Web.Controllers
             if (ModelState.IsValid)
             {
                 var expenseForm = _repository.GetExpenseForm(updatedForm.ExpenseFormID);
-                
+
                 Users user = _repository.GetUsersByName(User.Identity.Name);
                 expenseForm.UserID = user.UserID;
                 decimal totalAmount = CalculateTotalAmount(updatedForm.ExpenseDetails);
@@ -115,16 +112,16 @@ namespace Web.Controllers
                 expenseForm.Status = GeneralFunctions.GetExpenseFormStatusString(GeneralFunctions.ExpenseStatus.YenidenOnayaSunuldu);
                 expenseForm.CreatedDate = DateTime.Now;
                 // Mevcut ExpenseDetails verilerini güncelle veya ekle
-                                
+
                 foreach (var detail in updatedForm.ExpenseDetails)
                 {
                     if (detail.ExpenseDetailID == 0)
                     {
-                        _repository.UpdateAmount(detail.ExpenseDetailID, detail.Amount);                       
+                        _repository.UpdateAmount(detail.ExpenseDetailID, detail.Amount);
                     }
                     else
                     {
-                        _repository.UpdateAmount(detail.ExpenseDetailID, detail.Amount);                        
+                        _repository.UpdateAmount(detail.ExpenseDetailID, detail.Amount);
                     }
                 }
 
@@ -203,6 +200,18 @@ namespace Web.Controllers
 
             return RedirectToAction("Index", "ExpenseForm"); // Silme işlemi tamamlandıktan sonra yonlendirme
         }
-    }
 
+        [Authorize]
+        public IActionResult ApprovalForm(int page = 1)
+        {
+
+            var approvalForms = _context.Approvals.OrderByDescending(ef => ef.ApprovalID).ToPagedList(page, 8);
+            foreach (Approval approvalForm in approvalForms)
+            {
+                var expenseForm = _context.ExpenseForms.FirstOrDefault(e => e.ExpenseFormID == approvalForm.ExpenseFormID);
+                approvalForm.ExpenseForm = expenseForm;
+            }
+            return View(approvalForms);
+        }
+    }
 }

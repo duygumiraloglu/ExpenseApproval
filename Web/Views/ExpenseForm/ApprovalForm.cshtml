@@ -1,0 +1,79 @@
+﻿@using Web.Models
+@using X.PagedList
+@using X.PagedList.Mvc.Core
+@model IPagedList<Web.Models.Approval>
+
+@{
+    ViewData["Title"] = "ApprovalForm";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Masraf Tanımlama, Düzenleme ve Listeleme Ekranı</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
+</head>
+<body>
+
+    </br>
+    <div class="container mt-5">
+        <div class="form-group">
+            <h2>Personal Masraf Degerlendirme Listesi</h2>
+        </div>
+        <!-- Masraf kayıtlarını listeleyin -->
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Tarih</th>
+                    <th>Durum</th>
+                    <th>Toplam Masraf</th>
+                    <th>Detay</th>
+                    <th>Onayla</th>
+                    <th>Reddet</th>
+
+                </tr>
+            </thead>
+            <tbody>
+
+                <tr>
+            <tbody>
+                        @foreach (var approvalForm in Model)
+                        {
+                    <tr>
+                        <td>@approvalForm.ExpenseForm.CreatedDate</td>
+                        <td>@approvalForm.Status</td>
+                        <td>@approvalForm.ExpenseForm.TotalAmount</td>
+                        <td>
+                            <a asp-action="UpdateExpenseForm" asp-route-id="@approvalForm.ExpenseFormID">
+                                <input type="submit" value="Duzenle" class="btn btn-warning" />
+                            </a>
+                        </td>
+                        <td>
+                            <a asp-action="UpdateExpenseForm" asp-route-id="@approvalForm.ExpenseFormID">
+                                <input type="submit" value="Duzenle" class="btn btn-success" />
+                            </a>
+                        </td>
+                        <td>
+                            <a asp-action="UpdateExpenseForm" asp-route-id="@approvalForm.ExpenseFormID">
+                                <input type="submit" value="Duzenle" class="btn btn-danger" />
+                            </a>
+                        </td>
+                        <td>
+                    </tr>
+                        }
+            </tbody>
+            </tr>
+
+            </tbody>
+        </table>
+        <!-- Sayfalama yapisi -->
+        @Html.PagedListPager((IPagedList)Model,page=>Url.Action("ApprovalForm",new {page}))
+    </div>
+
+</body>
