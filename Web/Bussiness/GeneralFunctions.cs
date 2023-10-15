@@ -13,6 +13,38 @@ namespace Web.Bussiness
         {
             _context = context;
         }
+
+        public enum ExpenseStatus
+        {
+            OnayBekliyor,
+            Onaylandi,
+            Reddedildi,
+            YenidenOnayaSunuldu,
+            Muhasebede,
+            Odendi
+        }
+
+        public static string GetExpenseFormStatusString(ExpenseStatus status)
+        {
+            switch (status)
+            {
+                case ExpenseStatus.Onaylandi:
+                    return "Onaylandı";
+                case ExpenseStatus.Reddedildi:
+                    return "Onaylanmadı";
+                case ExpenseStatus.OnayBekliyor:
+                    return "Onay Bekliyor";
+                case ExpenseStatus.YenidenOnayaSunuldu:
+                    return "Yeniden Onaya Sunuldu";
+                case ExpenseStatus.Muhasebede:
+                    return "Muhasebede";
+                case ExpenseStatus.Odendi:
+                    return "Ödemesi Yapıldı";
+                default:
+                    return "Bilinmeyen Durum";
+            }
+        }
+
         public void TotalAmount()
         {
             var expenseForms = _context.ExpenseForms.ToList();

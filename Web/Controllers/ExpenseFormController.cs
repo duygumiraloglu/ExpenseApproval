@@ -27,8 +27,9 @@ namespace Web.Controllers
         public IActionResult Index(int page = 1)
         {
 
-            GeneralFunctions generalFunctions = new GeneralFunctions(_context);           
-            var expenseForms = _context.ExpenseForms.ToPagedList(page, 8);
+            GeneralFunctions generalFunctions = new GeneralFunctions(_context);
+            var expenseForms = _context.ExpenseForms.OrderByDescending(ef => ef.ExpenseFormID).ToPagedList(page, 8);
+
 
             return View(expenseForms);
         }
@@ -89,8 +90,6 @@ namespace Web.Controllers
                 .Include(ef => ef.ExpenseDetails)
                 .FirstOrDefault(ef => ef.ExpenseFormID == id);
 
-            
-
             if (expenseForm == null)
             {
                 return RedirectToAction("Index", "ExpenseForm");
@@ -113,7 +112,7 @@ namespace Web.Controllers
                 expenseForm.UserID = user.UserID;
                 decimal totalAmount = CalculateTotalAmount(updatedForm.ExpenseDetails);
                 expenseForm.TotalAmount = totalAmount;
-                expenseForm.Status = "Kabul edilmeyen masraf";
+                expenseForm.Status = GeneralFunctions.GetExpenseFormStatusString(GeneralFunctions.ExpenseStatus.YenidenOnayaSunuldu);
                 expenseForm.CreatedDate = DateTime.Now;
                 // Mevcut ExpenseDetails verilerini güncelle veya ekle
                                 
