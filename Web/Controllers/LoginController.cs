@@ -47,9 +47,17 @@ namespace Web.Controllers
                     ClaimsPrincipal principal = new ClaimsPrincipal(useridentity);
                     await HttpContext.SignInAsync(principal);
 
-                    return RedirectToAction("Index", "ExpenseForm");
-                }
 
+                    if(user.Role == "Çalisan") 
+                    { 
+                        return RedirectToAction("Index", "ExpenseForm");
+                    }
+
+                    if (user.Role == "Yönetici")
+                    {
+                        return RedirectToAction("ApprovalForm", "ExpenseForm");
+                    }
+                }
             }
 
             return View(model);
