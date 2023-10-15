@@ -27,9 +27,7 @@ namespace Web.Controllers
         public IActionResult Index(int page = 1)
         {
 
-
-            GeneralFunctions generalFunctions = new GeneralFunctions(_context);
-            generalFunctions.TotalAmount();
+            GeneralFunctions generalFunctions = new GeneralFunctions(_context);           
             var expenseForms = _context.ExpenseForms.ToPagedList(page, 8);
 
             return View(expenseForms);
@@ -91,6 +89,8 @@ namespace Web.Controllers
                 .Include(ef => ef.ExpenseDetails)
                 .FirstOrDefault(ef => ef.ExpenseFormID == id);
 
+            
+
             if (expenseForm == null)
             {
                 return RedirectToAction("Index", "ExpenseForm");
@@ -107,27 +107,32 @@ namespace Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                // Mevcut ExpenseForm verisini güncellenmesi
-                _context.Entry(updatedForm).State = EntityState.Modified;
-
+                var expenseForm = _repository.GetExpenseForm(updatedForm.ExpenseFormID);
+                
+                Users user = _repository.GetUsersByName(User.Identity.Name);
+                expenseForm.UserID = user.UserID;
+                decimal totalAmount = CalculateTotalAmount(updatedForm.ExpenseDetails);
+                expenseForm.TotalAmount = totalAmount;
+                expenseForm.Status = "Kabul edilmeyen masraf";
+                expenseForm.CreatedDate = DateTime.Now;
                 // Mevcut ExpenseDetails verilerini güncelle veya ekle
+                                
                 foreach (var detail in updatedForm.ExpenseDetails)
                 {
                     if (detail.ExpenseDetailID == 0)
                     {
-                        // Yeni bir ExpenseDetail
-                        _context.Entry(detail).State = EntityState.Added;
+                        _repository.UpdateAmount(detail.ExpenseDetailID, detail.Amount);                       
                     }
                     else
                     {
-                        // Mevcut bir ExpenseDetail
-                        _context.Entry(detail).State = EntityState.Modified;
+                        _repository.UpdateAmount(detail.ExpenseDetailID, detail.Amount);                        
                     }
                 }
 
                 try
                 {
-                    _context.SaveChangesAsync();
+
+                    _repository.UpdateExpenseForm(expenseForm);
                     return RedirectToAction("Index", "ExpenseForm"); // Başka bir sayfaya yönlendirin veya işlem sonuçlarını gösterilmesi
                 }
                 catch (DbUpdateException)

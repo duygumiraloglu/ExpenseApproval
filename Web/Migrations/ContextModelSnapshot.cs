@@ -34,7 +34,6 @@ namespace Web.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Comment")
-                        .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
@@ -42,14 +41,10 @@ namespace Web.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Status")
-                        .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
                     b.Property<int>("UserID")
-                        .HasColumnType("int");
-
-                    b.Property<int>("UserId")
                         .HasColumnType("int");
 
                     b.HasKey("ApprovalID");
@@ -74,7 +69,6 @@ namespace Web.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("ExpenseType")
-                        .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
@@ -93,26 +87,21 @@ namespace Web.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ExpenseFormID"));
 
-                    b.Property<DateTime>("CreatedDate")
+                    b.Property<DateTime?>("CreatedDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("ExpenseName")
-                        .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("Status")
-                        .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<decimal?>("TotalAmount")
+                    b.Property<decimal>("TotalAmount")
                         .HasColumnType("decimal(10,2)");
 
                     b.Property<int>("UserID")
-                        .HasColumnType("int");
-
-                    b.Property<int>("UserId")
                         .HasColumnType("int");
 
                     b.HasKey("ExpenseFormID");
@@ -123,14 +112,11 @@ namespace Web.Migrations
             modelBuilder.Entity("Web.Models.Users", b =>
                 {
                     b.Property<string>("Email")
-                        .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("FullName")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PasswordHash")
                         .IsRequired()
@@ -138,7 +124,6 @@ namespace Web.Migrations
                         .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("Role")
-                        .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
@@ -166,13 +151,11 @@ namespace Web.Migrations
 
             modelBuilder.Entity("Web.Models.ExpenseDetail", b =>
                 {
-                    b.HasOne("Web.Models.ExpenseForm", "ExpenseForm")
+                    b.HasOne("Web.Models.ExpenseForm", null)
                         .WithMany("ExpenseDetails")
                         .HasForeignKey("ExpenseFormID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("ExpenseForm");
                 });
 
             modelBuilder.Entity("Web.Models.ExpenseForm", b =>

@@ -11,6 +11,13 @@ namespace Web.Data
         {
             _context = context;
         }
+
+        public ExpenseForm GetExpenseForm(int expenseFormID)
+        {
+            return _context.ExpenseForms.FirstOrDefault(ef => ef.ExpenseFormID == expenseFormID);
+
+        }
+
         public void AddExpenseForm(ExpenseForm model)
         {
             _context.ExpenseForms.Add(model);
@@ -34,13 +41,19 @@ namespace Web.Data
             _context.SaveChanges();
         }
 
-        public void UpdateAmount(int expenseFormID, decimal newAmount)
+        public void UpdateExpenseForm(ExpenseForm expenseForm)
+        {    
+            _context.Entry(expenseForm).State = EntityState.Modified;
+            _context.Update(expenseForm);            
+        }
+
+        public void UpdateAmount(int expenseDetailID, decimal newAmount)
         {
-            var expenseForm = _context.ExpenseForms.FirstOrDefault(ef => ef.ExpenseFormID == expenseFormID);
+            var expenseForm = _context.ExpenseDetails.FirstOrDefault(x => x.ExpenseDetailID == expenseDetailID);
 
             if (expenseForm != null)
             {
-                expenseForm.TotalAmount = newAmount;
+                expenseForm.Amount = newAmount;
                 _context.SaveChanges();
             }
         }

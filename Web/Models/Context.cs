@@ -9,6 +9,7 @@ namespace Web.Models
         {
         }
 
+
         public void ConfigureServices(IServiceCollection services, IConfiguration configuration)
         {
             // Bağlamayı yapılandır
@@ -22,7 +23,7 @@ namespace Web.Models
         public DbSet<ExpenseDetail> ExpenseDetails { get; set; }
         public DbSet<Approval> Approvals { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
+        {           
             modelBuilder.Entity<Users>().HasNoKey();
             modelBuilder.Entity<ExpenseDetail>()
                 .Property(ef => ef.Amount)

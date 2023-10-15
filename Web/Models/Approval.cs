@@ -7,10 +7,8 @@ namespace Web.Models
     {
         public int ApprovalID { get; set; }
 
-        
         public int ExpenseFormID { get; set; }
 
-        [ForeignKey("UserID")]
         public int UserID { get; set; }
 
         public DateTime? ApprovalDate { get; set; }
